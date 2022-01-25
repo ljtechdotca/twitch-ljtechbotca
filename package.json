@@ -14,5 +14,5 @@
     "@twurple/chat": "^5.0.13",
     "@twurple/eventsub": "^5.0.13",
     "dotenv": "^14.2.0"
-  },
+  }
 }
