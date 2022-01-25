@@ -1,0 +1,20 @@
+{
+  "name": "twitch-bot",
+  "version": "1.0.0",
+  "description": "Twitch bot used for ljtechdotca",
+  "main": "index.js",
+  "author": "ljtechdotca",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@twurple/api": "^5.0.13",
+    "@twurple/auth": "^5.0.13",
+    "@twurple/chat": "^5.0.13",
+    "@twurple/eventsub": "^5.0.13"
+  },
+  "devDependencies": {
+    "dotenv": "^14.2.0"
+  }
+}
