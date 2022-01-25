@@ -5,7 +5,6 @@ const { randomEmote } = require("./helpers");
 require("dotenv").config();
 
 // environment variables
-// const SECRET = process.env.LJTECHBOTCA_SECRET;
 const CLIENT_ID = process.env.LJTECHBOTCA_ID;
 const ACCESS_TOKEN = process.env.LJTECHBOTCA_ACCESS_TOKEN;
 
