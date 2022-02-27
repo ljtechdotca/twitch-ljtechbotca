@@ -1,0 +1,5 @@
+note - new auth code
+  https://id.twitch.tv/oauth2/authorize?client_id=<CLIENT_ID>&redirect_uri=http://localhost:3000&response_type=code&scope=chat:read+chat:edit
+
+note - new access code
+  https://id.twitch.tv/oauth2/token?client_id=<CLIENT_ID>&client_secret=<CLIENT_SECRET>&code=<AUTH_CODE>&grant_type=authorization_code&redirect_uri=http://localhost:3000

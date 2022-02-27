@@ -6,7 +6,9 @@
   "author": "ljtechdotca",
   "license": "MIT",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "new-command": "node ./cli/new.mjs",
+    "test": "node ./commands/index.js"
   },
   "dependencies": {
     "@twurple/api": "^5.0.13",
