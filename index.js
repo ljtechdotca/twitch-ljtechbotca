@@ -4,8 +4,6 @@ const { INIT_COMMANDS } = require("./commands/index.js");
 
 require("dotenv").config();
 
-let today = "✨ Nothing is happening today!";
-
 async function main() {
   try {
     const auth = new StaticAuthProvider(
@@ -36,18 +34,29 @@ async function main() {
       }
     });
 
-    // client.onRegister((event) => {
-    //   client.say(
-    //     "ljtechdotca",
-    //     "_.-={ MrDestructoid ljtechbotca has arrived! }=-._"
-    //   );
-    //   setInterval(() => {
-    //     client.say("ljtechdotca", "!drop ljtechHype");
-    //   }, 900000);
-    //   setInterval(() => {
-    //     client.say("ljtechdotca", INIT_COMMANDS.discord);
-    //   }, 1800000);
-    // });
+    let count = 0;
+
+    client.onRegister((event) => {
+      client.say("ljtechdotca", "ljtechDerp ljtechbotca has arrived!");
+      setInterval(() => {
+        switch (count % 3) {
+          case 0:
+            client.say("ljtechdotca", "!drop ljtechDerp");
+            count++;
+            break;
+
+          case 1:
+            INIT_COMMANDS.discord.execute(client);
+            count++;
+            break;
+
+          case 2:
+            INIT_COMMANDS.today.execute(client);
+            count++;
+            break;
+        }
+      }, 1000 * 60 * 30);
+    });
   } catch (error) {
     console.error(error);
   }

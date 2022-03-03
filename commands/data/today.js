@@ -1,7 +1,6 @@
 module.exports = {
   name: "today",
-  message:
-    "Join the Unicorn Utterances Discord! https://discord.com/invite/FMcvc6T",
+  message: "✨ Nothing is happening today!",
   execute: function (client, user, args) {
     if (user === "ljtechdotca" && args[0] === "set") {
       this.message = args.slice(1, args.length).join(" ");

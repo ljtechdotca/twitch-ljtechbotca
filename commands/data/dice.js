@@ -4,7 +4,6 @@ const isNumber = (string, defaultTo) => {
   if (!isUndefined) {
     number = Math.abs(parseInt(string));
   }
-  console.log("isNumber:", { number });
   return number;
 };
 
