@@ -1,23 +1,20 @@
 const fs = require("fs");
-
 const path = require("path");
 
+// class used to create commands dynamically
 class Command {
   name = "";
   message = "";
   execute = () => {};
-
   constructor(init) {
     Object.assign(this, init);
   }
 }
 
+// read from /commands/data and create an object of commands
 const dataPath = path.resolve(".", "commands", "data");
-
 const commandNames = fs.readdirSync(dataPath);
-
 let commands = {};
-
 commandNames.forEach((command) => {
   const key = command.slice(0, command.length - 3);
 

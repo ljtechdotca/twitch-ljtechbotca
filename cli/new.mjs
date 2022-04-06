@@ -1,11 +1,11 @@
 import fs from "fs";
 import path from "path";
 
-let command = process.argv[2];
+// parse command name from terminal command line
+const command = process.argv[2];
+
+// write a new command file under the /commands/data directory
 const dataPath = path.resolve(".", "commands", "data", `${command}.js`);
-
-console.log(dataPath);
-
 const template = `module.exports = {
   name: "${command}",
   message: "This is a new command.",
@@ -13,5 +13,4 @@ const template = `module.exports = {
     client.say("ljtechdotca", this.message);
   },
 };`;
-
 fs.writeFileSync(dataPath, template);
