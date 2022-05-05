@@ -1,0 +1,1 @@
+just chatting and making a twitch bot thing that handles chat inside the terminals console logs 

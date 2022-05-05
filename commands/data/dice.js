@@ -12,6 +12,7 @@ const format = {
 };
 
 module.exports = {
+  description: "Lists all the vscode extensions ljtechdotca uses.",
   name: "dice",
   message: "Rolls a number between a <RANGE>",
   execute: function (client, user, args) {
