@@ -1,9 +1,10 @@
 const fs = require("fs");
 const path = require("path");
 
-// class used to create commands dynamically
+// class used to create commands manually
 class Command {
   name = "";
+  description = "";
   message = "";
   execute = () => {};
   constructor(init) {
@@ -26,14 +27,27 @@ module.exports = {
     ...commands,
     commands: new Command({
       name: "commands",
-      message: "Shows a list of all available commands",
+      description: "Shows a list of all available commands.",
+      message: Object.values(commands)
+        .map((command) => `!${command.name}`)
+        .join(", "),
       execute: function (client, user, args) {
-        client.say(
-          "ljtechdotca",
-          `${Object.values(commands)
-            .map((command) => `!${command.name}`)
-            .join(", ")}`
-        );
+        client.say("ljtechdotca", this.message);
+      },
+    }),
+    help: new Command({
+      name: "help",
+      description: "Gives detailed information of a command.",
+      message: function (args) {
+        const command = commands[args[0]];
+        if (command !== undefined) {
+          return commands[args[0]].description;
+        } else {
+          return `${args[0]} is not a valid command name, try !commands`;
+        }
+      },
+      execute: function (client, user, args) {
+        client.say("ljtechdotca", this.message(args));
       },
     }),
   },

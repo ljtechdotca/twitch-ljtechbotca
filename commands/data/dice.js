@@ -1,27 +1,14 @@
-const isNumber = (string, defaultTo) => {
-  const isUndefined = Number.isNaN(parseInt(string));
-  let number = defaultTo;
-  if (!isUndefined) {
-    number = Math.abs(parseInt(string));
-  }
-  return number;
-};
-
-const format = {
-  isNumber,
-};
+const { isNumber } = require("../../helpers/format");
 
 module.exports = {
-  description: "Lists all the vscode extensions ljtechdotca uses.",
   name: "dice",
-  message: "Rolls a number between a <RANGE>",
+  description: "Rolls a number between a given range. ex: !dice 10",
+  message: function (user, sides, value) {
+    return `@${user} has rolled a ${sides}-sided die and got ${value}!`;
+  },
   execute: function (client, user, args) {
-    const number = format.isNumber(args[0], 6);
-    client.say(
-      "ljtechdotca",
-      `@${user} rolled a ${number}-sided 🎲 and got ${
-        ~~(Math.random() * number) + 1
-      }`
-    );
+    const sides = isNumber(args[0], 6);
+    const value = Math.floor(Math.random() * sides) + 1;
+    client.say("ljtechdotca", this.message(user, sides, value));
   },
 };

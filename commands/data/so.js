@@ -1,12 +1,12 @@
 module.exports = {
   name: "so",
-  message: "Go checkout and follow ",
+  description: "Shout out a Twitch channel.",
+  message: function (channel) {
+    `Go check out and follow ${channel} @ https://www.twitch.tv/${channel}!`;
+  },
   execute: function (client, user, args) {
     if (user === "ljtechdotca") {
-      client.say(
-        "ljtechdotca",
-        this.message + `${args[0]} @ https://www.twitch.tv/${args[0]}`
-      );
+      client.say("ljtechdotca", this.message(args[0]));
     }
   },
 };

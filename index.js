@@ -1,19 +1,9 @@
 const { RefreshingAuthProvider } = require("@twurple/auth");
 const { ChatClient } = require("@twurple/chat");
 const { INIT_COMMANDS } = require("./commands/index.js");
+const { hexToRGB } = require("./helpers/format");
 const fs = require("fs");
-const commands = require("./commands/index.js");
 require("dotenv").config();
-
-const hexToRgb = (hex) =>
-  hex
-    .replace(
-      /^#?([a-f\d])([a-f\d])([a-f\d])$/i,
-      (m, r, g, b) => "#" + r + r + g + g + b + b
-    )
-    .substring(1)
-    .match(/.{2}/g)
-    .map((x) => parseInt(x, 16));
 
 async function main() {
   try {
@@ -60,17 +50,12 @@ async function main() {
           if (command === "today" && count == 2) {
             count++;
           }
-        } else {
-          console.log(`Invalid Command : ${command}`);
         }
       } else {
         INIT_COMMANDS.unlurk.execute(client, user);
-        const color = hexToRgb(msg.userInfo.color);
+        const color = hexToRGB(msg.userInfo.color);
         console.log(
-          `\x1b[38;2;${color[0]};${color[1]};${color[2]}m`,
-          user,
-          "\x1b[0m",
-          ": " + message
+          `\x1b[38;2;${color[0]};${color[1]};${color[2]}m${user}\x1b[0m: ${message}`
         );
       }
     });

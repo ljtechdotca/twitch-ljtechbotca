@@ -1,14 +1,15 @@
 import fs from "fs";
 import path from "path";
 
-// parse command name from terminal command line
-const command = process.argv[2];
+// use this cli with the following:
+// $yarn new-cmd <COMMAND_NAME>
 
-// write a new command file under the /commands/data directory
+const command = process.argv[2];
 const dataPath = path.resolve(".", "commands", "data", `${command}.js`);
 const template = `module.exports = {
   name: "${command}",
-  message: "This is a new command.",
+  description: "This is the help message.",
+  message: "This is the default message.",
   execute: function (client, user, args) {
     client.say("ljtechdotca", this.message);
   },

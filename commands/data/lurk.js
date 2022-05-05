@@ -4,24 +4,24 @@ let path = require("path");
 
 module.exports = {
   name: "lurk",
-  message: "They will be missed ljtechGasp",
-  execute: function (client, user, args) {
+  description: "Tell chat you are AFK.",
+  message: function (newLurker, user) {
+    if (newLurker) {
+      return `@${user} is now lurking. They will be missed. ljtechGasp`;
+    } else {
+      return `@${user} is still lurking. ljtechGasp`;
+    }
+  },
+  execute: function (client) {
     if (lurkers[user] === undefined) {
-      client.say(
-        "ljtechdotca",
-        "@" + user + " is now lurking. " + this.message
-      );
       lurkers[user] = user;
       fs.writeFileSync(
         path.resolve(".", "data", "lurkers.json"),
         JSON.stringify(lurkers)
       );
-      console.log({lurkers});
+      client.say("ljtechdotca", this.message(true, user));
     } else {
-      client.say(
-        "ljtechdotca",
-        "@" + user + " is still lurking. " + this.message
-      );
+      client.say("ljtechdotca", this.message(false, user));
     }
   },
 };

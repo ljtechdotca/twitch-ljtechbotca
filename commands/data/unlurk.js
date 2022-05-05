@@ -4,16 +4,18 @@ let path = require("path");
 
 module.exports = {
   name: "unlurk",
-  message: " has returned. Welcome back! ljtechHype",
+  description: "Links you my Twitter profile.",
+  message: function (user) {
+    return `@${user} has returned. Welcome back! ljtechGasp`;
+  },
   execute: function (client, user, args) {
     if (lurkers[user]) {
-      client.say("ljtechdotca", "@" + user + this.message);
       delete lurkers[user];
       fs.writeFileSync(
         path.resolve(".", "data", "lurkers.json"),
         JSON.stringify(lurkers)
       );
-      console.log({ lurkers });
+      client.say("ljtechdotca", this.message(user));
     }
   },
 };

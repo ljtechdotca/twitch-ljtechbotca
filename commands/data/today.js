@@ -3,14 +3,15 @@ const fs = require("fs");
 
 module.exports = {
   name: "today",
+  description: "Shout out a Twitch channel.",
   message: fs.readFileSync(path.resolve(".", "data", "today.txt")),
   execute: function (client, user, args) {
     if (user === "ljtechdotca" && args[0] === "set") {
-      const data = args.slice(1, args.length).join(" ");
-      fs.writeFileSync(path.resolve(".", "data", "today.txt"), data, {
+      const today = args.slice(1, args.length).join(" ");
+      fs.writeFileSync(path.resolve(".", "data", "today.txt"), today, {
         encoding: "utf8",
       });
-      this.message = args.slice(1, args.length).join(" ");
+      this.message = today;
     } else {
       client.say("ljtechdotca", this.message);
     }

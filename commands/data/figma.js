@@ -1,8 +1,8 @@
 module.exports = {
-  description: "Lists all the vscode extensions ljtechdotca uses.",
   name: "figma",
+  description: "Links you my Figma community profile.",
   message: "View my public Figma projects https://www.figma.com/@ljtech",
-  execute: function (client, user, args) {
+  execute: function (client) {
     client.say("ljtechdotca", this.message);
   },
 };
