@@ -1,1 +1,1 @@
-just chatting and making a twitch bot thing that handles chat inside the terminals console logs 
+just chatting, solving a few coding challenges, and working on a filtering feature for my websites blog page

@@ -53,7 +53,10 @@ async function main() {
         }
       } else {
         INIT_COMMANDS.unlurk.execute(client, user);
-        const color = hexToRGB(msg.userInfo.color);
+        let color = [255, 0, 0];
+        if (msg.userInfo.color) {
+          color = hexToRGB(msg.userInfo.color);
+        }
         console.log(
           `\x1b[38;2;${color[0]};${color[1]};${color[2]}m${user}\x1b[0m: ${message}`
         );
