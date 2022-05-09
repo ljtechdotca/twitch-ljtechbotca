@@ -1,1 +1,1 @@
-just chatting, solving a few coding challenges, and working on a filtering feature for my websites blog page
+Building a new discord bot that handles music requests by streaming YouTube videos

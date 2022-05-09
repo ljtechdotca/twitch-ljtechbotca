@@ -12,7 +12,7 @@ module.exports = {
       return `@${user} is still lurking. ljtechGasp`;
     }
   },
-  execute: function (client) {
+  execute: function (client, user) {
     if (lurkers[user] === undefined) {
       lurkers[user] = user;
       fs.writeFileSync(
