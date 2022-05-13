@@ -1,90 +1,92 @@
-const { RefreshingAuthProvider } = require("@twurple/auth");
 const { ChatClient } = require("@twurple/chat");
-const { INIT_COMMANDS } = require("./commands/index.js");
+const { commands } = require("./commands/index.js");
+const { config } = require("dotenv");
 const { hexToRGB } = require("./helpers/format");
+const { RefreshingAuthProvider } = require("@twurple/auth");
 const fs = require("fs");
-require("dotenv").config();
+
+config();
+
+// note : interval options
+let pointer = 0;
+let intervalCommands = ["today", "discord", "twitter", "github", "drop"];
+let currentCommand = () => intervalCommands[pointer % intervalCommands.length];
+const mins = 20;
 
 async function main() {
   try {
-    // reading access and refresh tokens from tokens.json
-    const tokenFile = fs.readFileSync("./tokens.json", "UTF-8");
+    // docs : init auth tokens
+    const tokenFile = fs.readFileSync("./tokens.json", "utf-8");
     const tokenData = JSON.parse(tokenFile);
-
-    // auto refreshing tokens data through client id and secret
     const auth = new RefreshingAuthProvider(
       {
         clientId: process.env.CLIENT_ID,
         clientSecret: process.env.CLIENT_SECRET,
-        onRefresh: (
-          newTokenData // rewriting tokens.json on refresh
-        ) =>
+        onRefresh: (newTokenData) =>
           fs.writeFileSync(
             "./tokens.json",
             JSON.stringify(newTokenData, null, 4),
-            "UTF-8"
+            "utf-8"
           ),
       },
       tokenData
     );
 
-    // creating a new twurple chat client instance
+    // docs : init twurple client
     const client = new ChatClient({
       authProvider: auth,
       channels: ["ljtechdotca"],
     });
     await client.connect();
 
-    // capture commands from incoming chat message
-    client.onMessage((channel, user, message, msg) => {
+    // docs : message event handler
+    client.onMessage((_channel, user, message, msg) => {
+      // note : terminal chat box
+      let color = [255, 0, 0];
+      if (msg.userInfo.color) {
+        color = hexToRGB(msg.userInfo.color);
+      }
+      console.log(
+        `[${new Date().toLocaleTimeString()}]\x1b[38;2;${color[0]};${
+          color[1]
+        };${color[2]}m[${user}]\x1b[0m: ${message}`
+      );
+      // note : twitch bot commands
+      const words = message.split(" ");
+      const commandName = words[0].slice(1);
       const isCommand = message.startsWith("!");
+      let details = { user };
       if (isCommand) {
-        const words = message.split(" ");
-        let command = words[0].slice(1);
-        const args = words.slice(1);
-        if (INIT_COMMANDS[command]) {
-          INIT_COMMANDS[command].execute(client, user, args);
-          if (command === "discord" && count == 1) {
-            count++;
+        const command = commands[commandName];
+        if (command) {
+          if (command === currentCommand()) {
+            pointer++;
           }
-          if (command === "today" && count == 2) {
-            count++;
-          }
+          const args = words.slice(1);
+          details.args = args;
+          command.execute(client, details);
         }
       } else {
-        INIT_COMMANDS.unlurk.execute(client, user);
-        let color = [255, 0, 0];
-        if (msg.userInfo.color) {
-          color = hexToRGB(msg.userInfo.color);
-        }
-        console.log(
-          `\x1b[38;2;${color[0]};${color[1]};${color[2]}m${user}\x1b[0m: ${message}`
-        );
+        commands.unlurk.execute(client, details);
       }
     });
 
-    // interval commands the bot will say in chat
-    let count = 0;
-    client.onRegister((event) => {
+    client.onRegister((_event) => {
+      // note : init welcome message
       client.say("ljtechdotca", "ljtechDerp ljtechbotca has arrived!");
+
+      // note : interval commands and messages
+      const details = {
+        user: "ljtechbotca",
+      };
       setInterval(() => {
-        switch (count % 3) {
-          case 0:
-            client.say("ljtechdotca", "!drop catJAM");
-            count++;
-            break;
-
-          case 1:
-            INIT_COMMANDS.discord.execute(client);
-            count++;
-            break;
-
-          case 2:
-            INIT_COMMANDS.today.execute(client);
-            count++;
-            break;
+        if (currentCommand() === "drop") {
+          client.say("ljtechdotca", "!drop catJAM parachute");
+        } else {
+          commands[currentCommand()].execute(client, details);
         }
-      }, 1000 * 60 * 30);
+        pointer++;
+      }, 1000 * 60 * mins);
     });
   } catch (error) {
     console.error(error);

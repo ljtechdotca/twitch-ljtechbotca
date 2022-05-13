@@ -1,53 +1,43 @@
-const fs = require("fs");
-const path = require("path");
+const { readdirSync } = require("fs");
+const { resolve } = require("path");
+const { Command } = require("../helpers/command");
 
-// class used to create commands manually
-class Command {
-  name = "";
-  description = "";
-  message = "";
-  execute = () => {};
-  constructor(init) {
-    Object.assign(this, init);
-  }
-}
+const help = new Command({
+  name: "help",
+  description: "Gives detailed information of a command.",
+  message: function (args) {
+    const command = commands[args[0]];
+    if (command !== undefined) {
+      return commands[args[0]].description;
+    } else {
+      return `${args[0]} is not a valid command name, try !commands`;
+    }
+  },
+  execute: function (client, { args, user }) {
+    client.say("ljtechdotca", this.message(args));
+  },
+});
 
-// read from /commands/data and create an object of commands
-const dataPath = path.resolve(".", "commands", "data");
-const commandNames = fs.readdirSync(dataPath);
+// docs : read single file commands from /commands/data and export as commands
+const commandNames = readdirSync(resolve(".", "commands", "data"));
 let commands = {};
-commandNames.forEach((command) => {
-  const key = command.slice(0, command.length - 3);
-
-  commands = { ...commands, [key]: require(`./data/${command}`) };
+commandNames.forEach((commandName) => {
+  const key = commandName.split(".")[0];
+  commands = { ...commands, [key]: require(`./data/${commandName}`) };
 });
 
 module.exports = {
-  INIT_COMMANDS: {
+  commands: {
     ...commands,
+    help,
     commands: new Command({
       name: "commands",
       description: "Shows a list of all available commands.",
-      message: Object.values(commands)
+      message: Object.values({ ...commands, help })
         .map((command) => `!${command.name}`)
         .join(", "),
-      execute: function (client, user, args) {
+      execute: function (client, { args, user }) {
         client.say("ljtechdotca", this.message);
-      },
-    }),
-    help: new Command({
-      name: "help",
-      description: "Gives detailed information of a command.",
-      message: function (args) {
-        const command = commands[args[0]];
-        if (command !== undefined) {
-          return commands[args[0]].description;
-        } else {
-          return `${args[0]} is not a valid command name, try !commands`;
-        }
-      },
-      execute: function (client, user, args) {
-        client.say("ljtechdotca", this.message(args));
       },
     }),
   },

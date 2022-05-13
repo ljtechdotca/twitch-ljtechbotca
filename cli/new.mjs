@@ -10,7 +10,7 @@ const template = `module.exports = {
   name: "${command}",
   description: "This is the help message.",
   message: "This is the default message.",
-  execute: function (client, user, args) {
+  execute: function (client, { args, user }) {
     client.say("ljtechdotca", this.message);
   },
 };`;

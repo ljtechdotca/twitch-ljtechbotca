@@ -4,8 +4,8 @@ module.exports = {
   message: function (channel) {
     return `Go check out and follow ${channel} @ https://www.twitch.tv/${channel}!`;
   },
-  execute: function (client, user, args) {
-    console.log({args})
+  execute: function (client, { args, user }) {
+    console.log({ args });
     if (user === "ljtechdotca" && args.length) {
       client.say("ljtechdotca", this.message(args[0]));
     }

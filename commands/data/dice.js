@@ -6,7 +6,7 @@ module.exports = {
   message: function (user, sides, value) {
     return `@${user} has rolled a ${sides}-sided die and got ${value}!`;
   },
-  execute: function (client, user, args) {
+  execute: function (client, { args, user }) {
     const sides = isNumber(args[0], 6);
     const value = Math.floor(Math.random() * sides) + 1;
     client.say("ljtechdotca", this.message(user, sides, value));
