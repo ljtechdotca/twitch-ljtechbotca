@@ -1,1 +1,5 @@
 ☐ ticks on interval messages
+
+
+☐ figure out pubsub badauth error
+    - probably has something to do with permissions

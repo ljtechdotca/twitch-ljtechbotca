@@ -8,7 +8,7 @@ module.exports = {
   message: function (user) {
     return `@${user} has returned. Welcome back! ljtechGasp`;
   },
-  execute: function (client, { args, user }) {
+  execute: function (client, user) {
     if (lurkers[user]) {
       delete lurkers[user];
       fs.writeFileSync(

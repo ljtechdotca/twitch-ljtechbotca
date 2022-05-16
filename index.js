@@ -1,89 +1,74 @@
 const { ChatClient } = require("@twurple/chat");
+const { PubSubClient } = require("@twurple/pubsub");
 const { commands } = require("./commands/index.js");
 const { config } = require("dotenv");
-const { hexToRGB } = require("./helpers/format");
-const { RefreshingAuthProvider } = require("@twurple/auth");
-const fs = require("fs");
+const { StaticAuthProvider } = require("@twurple/auth");
+const { tokens } = require("./helpers/tokens");
+const {
+  redemptionListener,
+  followingListener,
+  hostedListener,
+  messageListener,
+  raidListener,
+  resubListener,
+} = require("./helpers/events");
 
 config();
 
+// todo : refactor and abstract some things?
+
 // note : interval options
 let pointer = 0;
-let intervalCommands = ["today", "discord", "twitter", "github", "drop"];
-let currentCommand = () => intervalCommands[pointer % intervalCommands.length];
+let intervalCmds = ["today", "discord", "twitter", "github", "drop"];
+let currCmd = () => intervalCmds[pointer % intervalCmds.length];
 const mins = 20;
 
 async function main() {
   try {
-    // docs : init auth tokens
-    const tokenFile = fs.readFileSync("./tokens.json", "utf-8");
-    const tokenData = JSON.parse(tokenFile);
-    const auth = new RefreshingAuthProvider(
-      {
-        clientId: process.env.CLIENT_ID,
-        clientSecret: process.env.CLIENT_SECRET,
-        onRefresh: (newTokenData) =>
-          fs.writeFileSync(
-            "./tokens.json",
-            JSON.stringify(newTokenData, null, 4),
-            "utf-8"
-          ),
-      },
-      tokenData
+    // docs : init auth providers for the chat bot and streamer
+    const botAuth = tokens(
+      process.env.CLIENT_ID,
+      process.env.CLIENT_SECRET,
+      "bot-tokens.json"
+    );
+    const streamerAuth = new StaticAuthProvider(
+      process.env.STREAMER_CLIENT_ID,
+      process.env.STREAMER_TOKEN,
+      [
+        "chat:read",
+        "chat:edit",
+        "channel:moderate",
+        "channel:read:redemptions",
+        "user:read:follows",
+      ]
     );
 
-    // docs : init twurple client
-    const client = new ChatClient({
-      authProvider: auth,
+    // docs : init clients for chat and pubsub
+    const chatClient = new ChatClient({
+      authProvider: botAuth,
       channels: ["ljtechdotca"],
     });
-    await client.connect();
+    await chatClient.connect();
+    const pubSubClient = new PubSubClient();
+    const userId = await pubSubClient.registerUserListener(streamerAuth);
 
-    // docs : message event handler
-    client.onMessage((_channel, user, message, msg) => {
-      // note : terminal chat box
-      let color = [255, 0, 0];
-      if (msg.userInfo.color) {
-        color = hexToRGB(msg.userInfo.color);
-      }
-      console.log(
-        `[${new Date().toLocaleTimeString()}]\x1b[38;2;${color[0]};${
-          color[1]
-        };${color[2]}m[${user}]\x1b[0m: ${message}`
-      );
-      // note : twitch bot commands
-      const words = message.split(" ");
-      const commandName = words[0].slice(1);
-      const isCommand = message.startsWith("!");
-      let details = { user };
-      if (isCommand) {
-        const command = commands[commandName];
-        if (command) {
-          if (command === currentCommand()) {
-            pointer++;
-          }
-          const args = words.slice(1);
-          details.args = args;
-          command.execute(client, details);
-        }
-      } else {
-        commands.unlurk.execute(client, details);
-      }
-    });
+    hostedListener(chatClient);
+    messageListener(commands, chatClient);
+    raidListener(chatClient);
+    resubListener(chatClient);
+    await redemptionListener(userId, pubSubClient);
+    await followingListener(userId, pubSubClient);
 
-    client.onRegister((_event) => {
-      // note : init welcome message
-      client.say("ljtechdotca", "ljtechDerp ljtechbotca has arrived!");
-
-      // note : interval commands and messages
-      const details = {
-        user: "ljtechbotca",
-      };
+    // note : an interval is set onRegister to go through a list of predefined commands
+    chatClient.onRegister((_event) => {
+      chatClient.say("ljtechdotca", "ljtechDerp ljtechbotca has arrived!");
       setInterval(() => {
-        if (currentCommand() === "drop") {
-          client.say("ljtechdotca", "!drop catJAM parachute");
+        if (currCmd() === "drop") {
+          chatClient.say("ljtechdotca", "!drop catJAM parachute");
         } else {
-          commands[currentCommand()].execute(client, details);
+          commands[currCmd()].execute(chatClient, {
+            user: "ljtechbotca",
+          });
         }
         pointer++;
       }, 1000 * 60 * mins);

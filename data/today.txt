@@ -1,1 +1,1 @@
-Building a new discord bot that handles music requests by streaming YouTube videos
+Building a Discord music bot for playing music from YouTube, and fixing my Twitch bot for special message handling.

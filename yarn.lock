@@ -25,6 +25,20 @@
     tslib "^2.0.3"
     ws "^8.2.2"
 
+"@d-fischer/connection@^6.6.2":
+  version "6.6.2"
+  resolved "https://registry.yarnpkg.com/@d-fischer/connection/-/connection-6.6.2.tgz#4de63824ef08f9b8dd87cd78a9772f474be00ea0"
+  integrity sha512-lupWmQrsgcTUosf02kZK+Ygn3Q6HYisSGIwk3lxExOhmc+GJjwczyod8udC7nQJpwaFxebnBNSkqNGRMJBekSw==
+  dependencies:
+    "@d-fischer/isomorphic-ws" "^7.0.0"
+    "@d-fischer/logger" "^4.0.0"
+    "@d-fischer/shared-utils" "^3.0.1"
+    "@d-fischer/typed-event-emitter" "^3.2.2"
+    "@types/node" "^16.7.10"
+    "@types/ws" "^8.2.0"
+    tslib "^2.0.3"
+    ws "^8.2.2"
+
 "@d-fischer/cross-fetch@^4.0.2":
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/@d-fischer/cross-fetch/-/cross-fetch-4.0.2.tgz#1a086c0066462fee196420748c283389c66fd5aa"
@@ -168,6 +182,15 @@
     klona "^2.0.4"
     tslib "^2.0.3"
 
+"@twurple/common@^5.1.6":
+  version "5.1.6"
+  resolved "https://registry.yarnpkg.com/@twurple/common/-/common-5.1.6.tgz#85219cdee320e07fda7f1f8ddb2378d26472afea"
+  integrity sha512-mFDcCDbqx8MWmxGQmn0kSV7nEqTDjF7CLimRm34MMPl5gskp+isbKVdkXBy68VftQvtz92U/HRF25eTdOpDyEw==
+  dependencies:
+    "@d-fischer/shared-utils" "^3.2.0"
+    klona "^2.0.4"
+    tslib "^2.0.3"
+
 "@twurple/eventsub@^5.0.13":
   version "5.0.13"
   resolved "https://registry.yarnpkg.com/@twurple/eventsub/-/eventsub-5.0.13.tgz#8eba03e0aaeffffde3a2aa67be6b5a8254808a24"
@@ -181,6 +204,18 @@
     "@twurple/common" "^5.0.13"
     "@types/express-serve-static-core" "^4.17.24"
     httpanda "^0.4.4"
+    tslib "^2.0.3"
+
+"@twurple/pubsub@^5.1.6":
+  version "5.1.6"
+  resolved "https://registry.yarnpkg.com/@twurple/pubsub/-/pubsub-5.1.6.tgz#682c180b477e1b337db1d9cbbe82a0b15dbe8add"
+  integrity sha512-o8EhLMNnTDgX6xneo195kAXsrY5oXUsmEHwyUEXhWZPDV1wf1sZqz54C+TUDD5bVrb/SWvDocbKlkecQPgJXJg==
+  dependencies:
+    "@d-fischer/connection" "^6.6.2"
+    "@d-fischer/logger" "^4.0.0"
+    "@d-fischer/shared-utils" "^3.2.0"
+    "@d-fischer/typed-event-emitter" "^3.2.2"
+    "@twurple/common" "^5.1.6"
     tslib "^2.0.3"
 
 "@types/express-serve-static-core@^4.17.24":
